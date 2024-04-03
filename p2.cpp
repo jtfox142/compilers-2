@@ -1,4 +1,5 @@
-#include "testScanner.hpp"
+#include "scanner.hpp"
+#include "parser.hpp"
 
 #include <iostream>
 #include <deque>
@@ -40,12 +41,13 @@ int main(int argc, char* argv[]) {
 
     //Try to open the file and read the data onto a deque for processing
     try {
-        testScanner::start(fileName);
+        scanner::startStream(fileName);
+        parser::parse();
     } catch(const std::exception& ex) {
         std::cerr << ex.what() << '\n';
-        return 1;
+        exit(1);
     }
 
-    testScanner::print();
+    //testScanner::print();
     return 0;
 }

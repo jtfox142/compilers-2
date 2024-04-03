@@ -2,17 +2,17 @@ CC = g++
 
 CFLAGS = -Wall -std=c++11
 
-p1: p1.o scanner.o testScanner.o
-	$(CC) $(CFLAGS) -o p1 p1.o scanner.o testScanner.o
+p2: p2.o scanner.o parser.o
+	$(CC) $(CFLAGS) -o p2 p2.o scanner.o parser.o
 
-p1.o: p1.cpp testScanner.cpp testScanner.hpp scanner.cpp scanner.hpp token.hpp
-	$(CC) $(CFLAGS) -c p1.cpp
+p2.o: p2.cpp parser.cpp parser.hpp scanner.cpp scanner.hpp token.hpp
+	$(CC) $(CFLAGS) -c p2.cpp
 
-testScanner.o: testScanner.cpp testScanner.hpp scanner.cpp scanner.hpp token.hpp
-	$(CC) $(CFLAGS) -c testScanner.cpp
+parser.o: parser.cpp parser.hpp scanner.cpp scanner.hpp token.hpp
+	$(CC) $(CFLAGS) -c parser.cpp
 
 scanner.o: scanner.cpp scanner.hpp token.hpp
 	$(CC) $(CFLAGS) -c scanner.cpp
 
 clean: 
-	rm *.o p1
+	rm *.o p2
