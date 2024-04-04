@@ -62,9 +62,9 @@ void match(std::string terminalString) {
         _lookahead = scanner::getNextToken();
     }
     else {
-        std::cerr << "ERROR: Token instance \"" << _lookahead.tokenInstance << "\" at line " << _lookahead.lineNumber 
+        std::cout << "ERROR: Token instance \"" << _lookahead.tokenInstance << "\" at line " << _lookahead.lineNumber 
             << " char " << _lookahead.charNumber << " did not match the expected value of \"" << terminalString << "\"" << std::endl;
-        exit(1);
+        throw std::runtime_error("Mismatch Error");
     }
 }
 
@@ -75,10 +75,10 @@ void match(int tokenId) {
     }
     else {
         std::string tokenIdArray[] = {"idTok", "keyTok", "opTok", "intTok", "EOFTok"};
-        std::cerr << "ERROR: The token instance \"" << _lookahead.tokenInstance << "\" of type " << tokenIdArray[_lookahead.tokenId] 
+        std::cout << "ERROR: The token instance \"" << _lookahead.tokenInstance << "\" of type " << tokenIdArray[_lookahead.tokenId] 
             << " at line " << _lookahead.lineNumber << " char " << _lookahead.charNumber 
             << " did not match the expected value of \"" << tokenIdArray[tokenId] << "\"" << std::endl;
-        exit(1);
+        throw std::runtime_error("Mismatch Error");
     }
 }
 
@@ -104,7 +104,14 @@ bool setContainsLookahead(std::vector<std::string> set) {
 //<program> -> <vars> tape <func> <block> | <vars> tape <block>
 void program() {
     vars();
-    match("tape");
+    
+    try {
+        match("tape");
+    }
+    catch(const std::exception& ex) {
+        std::cerr << ex.what() << " inside of nonterminal \"program\"" << std::endl;
+        exit(1);
+    }
 
     if(_lookahead.tokenInstance == "func") {
         func();
@@ -117,53 +124,166 @@ void program() {
 
 //<func> -> func Identifier <block>
 void func() {
-  match("func");
-  block();
-  return;
+    try {
+        match("func");
+    }
+    catch(const std::exception& ex) {
+        std::cerr << ex.what() << " inside of nonterminal \"func\"" << std::endl;
+        exit(1);
+    }
+    block();
+    return;
 }
 
 //<block> -> { <vars> <stats> }
 void block() {
-    match("{");
-    vars();
-    stats();
-    match("}");
+    try {
+        match("{");
+        vars();
+        stats();
+        match("}");
+    }
+    catch(const std::exception& ex) {
+        std::cerr << ex.what() << " inside of nonterminal \"block\"" << std::endl;
+        exit(1);
+    }
     return;
 }
 
 //<vars> -> empty | create Identifier ; | create Identifier := Integer ; <vars>
 void vars() {
-    if(_lookahead.tokenInstance == "create") {
-        match("create");
-        if(_lookahead.tokenId == token::tokenIdList::opTok) {
-            match(":=");
-            match(token::tokenIdList::intTok);
-            match(";");
-            vars();
+    try {
+        if(_lookahead.tokenInstance == "create") {
+            match("create");
+            if(_lookahead.tokenId == token::tokenIdList::opTok) {
+                match(":=");
+                match(token::tokenIdList::intTok);
+                match(";");
+                vars();
+            }
+            return;
         }
-        return;
+        else
+            return;
     }
-    else
-        return;
+    catch(const std::exception& ex) {
+        std::cerr << ex.what() << " inside of nonterminal \"vars\"" << std::endl;
+        exit(1);
+    }
 }
 
 //<expr> -> <N> - <expr> | <N>
-void expr();
+void expr() {
+    N();
+
+    if(_lookahead.tokenInstance == "-") {
+        try {
+            match("-");
+        }
+        catch(const std::exception& ex) {
+            std::cerr << ex.what() << " inside of nonterminal \"expr\"" << std::endl;
+            exit(1);
+        }
+        expr();
+    }
+    
+    return;
+}
 
 //<N> -> <A> <NPrime>
-void N();
+void N() {
+    A();
+    NPrime();
+}
 
 //<NPrime> -> empty | / <A> <NPrime> | + <A> <NPrime>
-void NPrime();
+void NPrime() {
+    try {
+        if(_lookahead.tokenInstance == "/") {
+            match("/");
+            A();
+            NPrime();
+            return;
+        }
+        else if(_lookahead.tokenInstance == "+") {
+            match("+");
+            A();
+            NPrime();
+            return;
+        }
+        else
+            return;
+    }
+    catch(const std::exception& ex) {
+        std::cerr << ex.what() << " inside of nonterminal \"NPrime\"" << std::endl;
+        exit(1);
+    }
+}
 
 //<A> -> <M> * <A> | <M>
-void A();
+void A() {
+    M();
+
+    if(_lookahead.tokenInstance == "*") {
+        try {
+            match("*");
+        }
+        catch(const std::exception& ex) {
+            std::cerr << ex.what() << " inside of nonterminal \"A\"" << std::endl;
+            exit(1);
+        }
+        A();
+    }
+
+    return;
+}
 
 //<M> -> ^ <M> | <R>
-void M();
+void M() {
+    if(_lookahead.tokenInstance == "^") {
+        try {
+            match("^");
+        }
+        catch(const std::exception& ex) {
+            std::cerr << ex.what() << " inside of nonterminal \"M\"" << std::endl;
+            exit(1);
+        }
+        M();
+        return;
+    }
+
+    R();
+    return;
+}
 
 //<R> -> ( <expr> ) | Identifier | Integer
-void R();
+void R() {
+    try{
+        if(_lookahead.tokenInstance == "(") {
+            match("(");
+            expr();
+            match(")");
+            return;
+        }
+        else if(_lookahead.tokenId == token::tokenIdList::idTok) {
+            match(token::tokenIdList::idTok);
+            return;
+        }
+        else if(_lookahead.tokenId == token::tokenIdList::intTok) {
+            match(token::tokenIdList::intTok);
+            return;
+        }
+        else {
+            std::cerr << "Error in nonterminal R: symbol " << _lookahead.tokenInstance << "\" did not match allowed symbols."
+                << "Allowed symbols are: \"(\", identifiers, and integers." << std::endl;
+            exit(1);
+        }
+    }
+    catch(const std::exception& ex) {
+        std::cerr << ex.what() << " inside of nonterminal \"R\"" << std::endl;
+        exit(1);
+    }
+}
 
 //<stats> -> <stat> <mStat>
 void stats() {
@@ -189,14 +309,14 @@ void mStat() {
 //<stat> -> <in> ; | <out> ; | <block> | <if> ; | <loop1> ; | <loop2> ; | <assign> ; |
 //<goto> ; | <label> ; | <pick> ;
 void stat() {
-    /*std::vector<std::string> firstSet;
+    std::vector<std::string> firstSet;
     firstSet = first("block");
 
     //If the first set of block contains the lookahead token, then...
     if(setContainsLookahead(firstSet)) {
         block();
         return;
-    }*/
+    }
 
     std::string token = _lookahead.tokenInstance;
 
@@ -229,15 +349,47 @@ void stat() {
 
 //<in> -> cin Identifier
 void in() {
-    match("cin");
+    try {
+        match("cin");
+    }
+    catch(const std::exception& ex) {
+        std::cerr << ex.what() << " inside of nonterminal \"in\"" << std::endl;
+        exit(1);
+    }
     return;
 }
 
 //<out> -> cout <expr>
-void out();
+void out() {
+    try {
+        match("cout");
+    }
+    catch(const std::exception& ex) {
+        std::cerr << ex.what() << " inside of nonterminal \"out\"" << std::endl;
+        exit(1);
+    }
+    expr();
+    return;
+}
 
 //<if> -> if [ <expr> <RO> <expr> ] then <stat>
-void ifNonTerminal();
+void ifNonTerminal() {
+    try {
+        match("if");
+        match("[");
+        expr();
+        RO();
+        expr();
+        match("]");
+        match("then");
+        stat();
+    }
+    catch(const std::exception& ex) {
+        std::cerr << ex.what() << " inside of nonterminal \"ifNonTerminal\"" << std::endl;
+        exit(1);
+    }
+    return;
+}
 
 //<pick> -> pick <expr> <pickbody>
 void pick();
@@ -246,7 +398,22 @@ void pick();
 void pickbody();
 
 //<loop1> -> while [ <expr> <RO> <expr> ] <stat>
-void loop1();
+void loop1() {
+    try {
+        match("while");
+        match("[");
+        expr();
+        RO();
+        expr();
+        match("]");
+        stat();
+    }
+    catch(const std::exception& ex) {
+        std::cerr << ex.what() << " inside of nonterminal \"loop1\"" << std::endl;
+        exit(1);
+    }
+    return;
+}
 
 //<loop2> -> repeat <stat> until [ <expr> <RO> <expr> ]
 void loop2();
@@ -255,7 +422,40 @@ void loop2();
 void assign();
 
 //<RO> -> < | > | == | ... (three tokens here) | =!=
-void RO();
+void RO() {
+    try {
+        if(_lookahead.tokenInstance == "<") {
+            match("<");
+            return;
+        }
+        else if(_lookahead.tokenInstance == ">") {
+            match(">");
+            return;
+        }
+        else if(_lookahead.tokenInstance == ".") {
+            match(".");
+            match(".");
+            match(".");
+            return;
+        }
+        else if(_lookahead.tokenInstance == "==") {
+            match("==");
+            return;
+        }
+        else if(_lookahead.tokenInstance == "=!=") {
+            match("=!=");
+            return;
+        }
+        else {
+            std::cerr << "Error in RO nonterminal: could not find matching symbol for \"" << _lookahead.tokenInstance << "\"" << std::endl;
+            exit(1);
+        }
+    }
+    catch(const std::exception& ex) {
+        std::cerr << ex.what() << " inside of nonterminal \"RO\"" << std::endl;
+        exit(1);
+    }
+}
 
 //<label> -> label Identifier
 void label();
