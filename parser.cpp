@@ -164,12 +164,14 @@ void vars() {
         if(_lookahead.tokenInstance == "create") {
             match("create");
             match(token::idTok);
-            if(_lookahead.tokenId == token::tokenIdList::opTok) {
+            if(_lookahead.tokenInstance == ":=") {
                 match(":=");
                 match(token::tokenIdList::intTok);
                 match(";");
                 vars();
             }
+            else 
+                match(";");
             return;
         }
         else
@@ -340,7 +342,7 @@ void stat() {
     }
     else if(token == "while") {
         loop1();
-    }/*
+    }
     else if(token == "repeat")
         loop2();
     else if(token == "set")
@@ -350,7 +352,7 @@ void stat() {
     else if(token == "label")
         label();
     else if(token == "pick")
-        pick();*/
+        pick();
     
     match(";");
     return;
@@ -402,10 +404,33 @@ void ifNonTerminal() {
 }
 
 //<pick> -> pick <expr> <pickbody>
-void pick();
+void pick() {
+    try {
+        match("pick");
+    }
+    catch(const std::exception& ex) {
+        std::cerr << ex.what() << " inside of nonterminal \"pick\"" << std::endl;
+        exit(1);
+    }
+
+    expr();
+    pickbody();
+}
 
 //<pickbody> -> <stat> : <stat>
-void pickbody();
+void pickbody() {
+    stat();
+
+    try {
+        match(":");
+    }
+    catch(const std::exception& ex) {
+        std::cerr << ex.what() << " inside of nonterminal \"pickbody\"" << std::endl;
+        exit(1);
+    }
+
+    stat();
+}
 
 //<loop1> -> while [ <expr> <RO> <expr> ] <stat>
 void loop1() {
@@ -426,10 +451,38 @@ void loop1() {
 }
 
 //<loop2> -> repeat <stat> until [ <expr> <RO> <expr> ]
-void loop2();
+void loop2() {
+    try{
+        match("repeat");
+        stat();
+        match("until");
+        match("[");
+        expr();
+        RO();
+        expr();
+        match("]");
+    }
+    catch(const std::exception& ex) {
+        std::cerr << ex.what() << " inside of nonterminal \"loop2\"" << std::endl;
+        exit(1);
+    }
+}
 
 //<assign> -> set Identifier = <expr> | Identifier = <expr>
-void assign();
+void assign() {
+        try {
+            if(_lookahead.tokenInstance == "set") {
+                match("set");
+            }
+            match(token::idTok);
+            match("=");
+            expr();
+        }
+        catch(const std::exception& ex) {
+            std::cerr << ex.what() << " inside of nonterminal \"assign\"" << std::endl;
+            exit(1);
+        }   
+}
 
 //<RO> -> < | > | == | ... (three tokens here) | =!=
 void RO() {
@@ -468,7 +521,25 @@ void RO() {
 }
 
 //<label> -> label Identifier
-void label();
+void label() {
+    try {
+        match("label");
+        match(token::idTok);
+    }
+    catch(const std::exception& ex) {
+        std::cerr << ex.what() << " inside of nonterminal \"label\"" << std::endl;
+        exit(1);
+    }
+}
 
 //<goto> -> jump Identifier
-void gotoNonTerminal();
+void gotoNonTerminal() {
+    try {
+        match("jump");
+        match(token::idTok);
+    }
+    catch(const std::exception& ex) {
+        std::cerr << ex.what() << " inside of nonterminal \"gotoNonTerminal\"" << std::endl;
+        exit(1);
+    }
+}
