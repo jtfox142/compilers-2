@@ -41,6 +41,13 @@ void RO();
 void label();
 void gotoNonTerminal();
 
+
+/*
+TODO
+    * Add in Identifiers wherever the grammars say "Identifier"
+
+*/
+
 void parser::parse() {
     _lookahead = scanner::getNextToken();
 
@@ -126,6 +133,7 @@ void program() {
 void func() {
     try {
         match("func");
+        match(token::tokenIdList::idTok);
     }
     catch(const std::exception& ex) {
         std::cerr << ex.what() << " inside of nonterminal \"func\"" << std::endl;
@@ -155,6 +163,7 @@ void vars() {
     try {
         if(_lookahead.tokenInstance == "create") {
             match("create");
+            match(token::idTok);
             if(_lookahead.tokenId == token::tokenIdList::opTok) {
                 match(":=");
                 match(token::tokenIdList::intTok);
@@ -351,6 +360,7 @@ void stat() {
 void in() {
     try {
         match("cin");
+        match(token::idTok);
     }
     catch(const std::exception& ex) {
         std::cerr << ex.what() << " inside of nonterminal \"in\"" << std::endl;
