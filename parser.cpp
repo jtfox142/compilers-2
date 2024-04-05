@@ -46,7 +46,7 @@ node::Node* gotoNonTerminal();
 node::Node* parser::parse() {
     _lookahead = scanner::getNextToken();
     int level = 0;
-    node::Node *root = program(level);
+    node::Node *root = program();
 
     std::cout << "Okay :)" << std::endl;
     return root;
@@ -99,7 +99,7 @@ bool setContainsLookahead(std::vector<std::string> set) {
 }
 
 //<program> -> <vars> tape <func> <block> | <vars> tape <block>
-node::Node* program(int level) {
+node::Node* program() {
     node::Node* root = new node::Node("program()");
     tree::insert(vars(), root);
     
@@ -113,16 +113,16 @@ node::Node* program(int level) {
     }
 
     if(_lookahead.tokenInstance == "func") {
-        func();
+        tree::insert(func(), root);
     }
 
-    block();
+    tree::insert(block(), root);
 
-    return;
+    return root;
 }
 
 //<func> -> func Identifier <block>
-node::Node* func(int level) {
+node::Node* func() {
     try {
         match("func");
         match(token::tokenIdList::idTok);
@@ -136,7 +136,7 @@ node::Node* func(int level) {
 }
 
 //<block> -> { <vars> <stats> }
-node::Node* block(int level) {
+node::Node* block() {
     try {
         match("{");
         vars();
@@ -151,7 +151,7 @@ node::Node* block(int level) {
 }
 
 //<vars> -> empty | create Identifier ; | create Identifier := Integer ; <vars>
-node::Node* vars(int level) {
+node::Node* vars() {
     try {
         if(_lookahead.tokenInstance == "create") {
             match("create");
@@ -176,7 +176,7 @@ node::Node* vars(int level) {
 }
 
 //<expr> -> <N> - <expr> | <N>
-node::Node* expr(int level) {
+node::Node* expr() {
     N();
 
     if(_lookahead.tokenInstance == "-") {
@@ -194,13 +194,13 @@ node::Node* expr(int level) {
 }
 
 //<N> -> <A> <NPrime>
-node::Node* N(int level) {
+node::Node* N() {
     A();
     NPrime();
 }
 
 //<NPrime> -> empty | / <A> <NPrime> | + <A> <NPrime>
-node::Node* NPrime(int level) {
+node::Node* NPrime() {
     try {
         if(_lookahead.tokenInstance == "/") {
             match("/");
@@ -224,7 +224,7 @@ node::Node* NPrime(int level) {
 }
 
 //<A> -> <M> * <A> | <M>
-node::Node* A(int level) {
+node::Node* A() {
     M();
 
     if(_lookahead.tokenInstance == "*") {
@@ -242,7 +242,7 @@ node::Node* A(int level) {
 }
 
 //<M> -> ^ <M> | <R>
-node::Node* M(int level) {
+node::Node* M() {
     if(_lookahead.tokenInstance == "^") {
         try {
             match("^");
@@ -260,7 +260,7 @@ node::Node* M(int level) {
 }
 
 //<R> -> ( <expr> ) | Identifier | Integer
-node::Node* R(int level) {
+node::Node* R() {
     try{
         if(_lookahead.tokenInstance == "(") {
             match("(");
@@ -289,14 +289,14 @@ node::Node* R(int level) {
 }
 
 //<stats> -> <stat> <mStat>
-node::Node* stats(int level) {
+node::Node* stats() {
     stat();
     mStat();
     return;
 }
 
 //<mStat> -> empty | <stat> <mStat>
-node::Node* mStat(int level) {
+node::Node* mStat() {
     std::vector<std::string> firstSet;
     firstSet = first("stat");
 
@@ -311,7 +311,7 @@ node::Node* mStat(int level) {
 
 //<stat> -> <in> ; | <out> ; | <block> | <if> ; | <loop1> ; | <loop2> ; | <assign> ; |
 //<goto> ; | <label> ; | <pick> ;
-node::Node* stat(int level) {
+node::Node* stat() {
     std::vector<std::string> firstSet;
     firstSet = first("block");
 
@@ -351,7 +351,7 @@ node::Node* stat(int level) {
 }
 
 //<in> -> cin Identifier
-node::Node* in(int level) {
+node::Node* in() {
     try {
         match("cin");
         match(token::idTok);
@@ -364,7 +364,7 @@ node::Node* in(int level) {
 }
 
 //<out> -> cout <expr>
-node::Node* out(int level) {
+node::Node* out() {
     try {
         match("cout");
     }
@@ -377,7 +377,7 @@ node::Node* out(int level) {
 }
 
 //<if> -> if [ <expr> <RO> <expr> ] then <stat>
-node::Node* ifNonTerminal(int level) {
+node::Node* ifNonTerminal() {
     try {
         match("if");
         match("[");
@@ -396,7 +396,7 @@ node::Node* ifNonTerminal(int level) {
 }
 
 //<pick> -> pick <expr> <pickbody>
-node::Node* pick(int level) {
+node::Node* pick() {
     try {
         match("pick");
     }
@@ -410,7 +410,7 @@ node::Node* pick(int level) {
 }
 
 //<pickbody> -> <stat> : <stat>
-node::Node* pickbody(int level) {
+node::Node* pickbody() {
     stat();
 
     try {
@@ -425,7 +425,7 @@ node::Node* pickbody(int level) {
 }
 
 //<loop1> -> while [ <expr> <RO> <expr> ] <stat>
-node::Node* loop1(int level) {
+node::Node* loop1() {
     try {
         match("while");
         match("[");
@@ -443,7 +443,7 @@ node::Node* loop1(int level) {
 }
 
 //<loop2> -> repeat <stat> until [ <expr> <RO> <expr> ]
-node::Node* loop2(int level) {
+node::Node* loop2() {
     try{
         match("repeat");
         stat();
@@ -461,7 +461,7 @@ node::Node* loop2(int level) {
 }
 
 //<assign> -> set Identifier = <expr> | Identifier = <expr>
-node::Node* assign(int level) {
+node::Node* assign() {
         try {
             if(_lookahead.tokenInstance == "set") {
                 match("set");
@@ -477,7 +477,7 @@ node::Node* assign(int level) {
 }
 
 //<RO> -> < | > | == | ... (three tokens here) | =!=
-node::Node* RO(int level) {
+node::Node* RO() {
     try {
         if(_lookahead.tokenInstance == "<") {
             match("<");
@@ -513,7 +513,7 @@ node::Node* RO(int level) {
 }
 
 //<label> -> label Identifier
-node::Node* label(int level) {
+node::Node* label() {
     try {
         match("label");
         match(token::idTok);
@@ -525,7 +525,7 @@ node::Node* label(int level) {
 }
 
 //<goto> -> jump Identifier
-node::Node* gotoNonTerminal(int level) {
+node::Node* gotoNonTerminal() {
     try {
         match("jump");
         match(token::idTok);

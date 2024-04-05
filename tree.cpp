@@ -14,6 +14,10 @@ void tree::printPreorder(node::Node *root, int level) {
     printPreorder(root->getChildTwo(), level+1);
     printPreorder(root->getChildThree(), level+1);
     printPreorder(root->getChildFour(), level+1);
+    printPreorder(root->getChildFive(), level+1);
+    printPreorder(root->getChildSix(), level+1);
+    printPreorder(root->getChildSeven(), level+1);
+    printPreorder(root->getChildEight(), level+1);
 }
 
 //Inefficient, but it works. Would love to optimize later

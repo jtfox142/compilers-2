@@ -16,6 +16,10 @@ namespace node {
                 childTwo = NULL;
                 childThree = NULL;
                 childFour = NULL;
+                childFive = NULL;
+                childSix = NULL;
+                childSeven = NULL;
+                childEight = NULL;
             }
 
             Node* getChildOne() {
@@ -50,7 +54,43 @@ namespace node {
             }
 
             void setChildFour(std::string val) {
-                childFour = new Node(val);
+                childFive = new Node(val);
+                childNum++;
+            }
+
+            Node* getChildFive() {
+                return childFive;
+            }
+
+            void setChildFive(std::string val) {
+                childFive = new Node(val);
+                childNum++;
+            }
+
+            Node* getChildSix() {
+                return childSix;
+            }
+
+            void setChildSix(std::string val) {
+                childSix = new Node(val);
+                childNum++;
+            }
+
+            Node* getChildSeven() {
+                return childSeven;
+            }
+
+            void setChildSeven(std::string val) {
+                childSeven = new Node(val);
+                childNum++;
+            }
+
+            Node* getChildEight() {
+                return childEight;
+            }
+
+            void setChildEight(std::string val) {
+                childEight = new Node(val);
                 childNum++;
             }
 
@@ -69,6 +109,11 @@ namespace node {
             Node* childTwo;
             Node* childThree;
             Node* childFour;
+            Node* childFive;
+            Node* childSix;
+            Node* childSeven;
+            Node* childEight;
+
     };
 
 };  // namespace node
