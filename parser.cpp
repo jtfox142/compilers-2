@@ -17,12 +17,6 @@ namespace {
 
 }
 
-//Macros for node insertion into tree
-#define CHILD_ONE 1
-#define CHILD_TWO 2
-#define CHILD_THREE 3
-#define CHILD_FOUR 4
-
 //Prototypes
 node::Node* program();
 node::Node* func();
@@ -107,9 +101,10 @@ bool setContainsLookahead(std::vector<std::string> set) {
 //<program> -> <vars> tape <func> <block> | <vars> tape <block>
 node::Node* program(int level) {
     node::Node* root = new node::Node("program()");
-    tree::insert(vars(), CHILD_ONE, root);
+    tree::insert(vars(), root);
     
     try {
+        tree::insert(new node::Node("tape"), root);
         match("tape");
     }
     catch(const std::exception& ex) {

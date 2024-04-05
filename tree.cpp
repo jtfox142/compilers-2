@@ -17,23 +17,23 @@ void tree::printPreorder(node::Node *root, int level) {
 }
 
 //Inefficient, but it works. Would love to optimize later
-void tree::insert(node::Node* token, int childNum, node::Node* root) {
+void tree::insert(node::Node* token, node::Node* root) {
     //std::cout << "Inserting " << word << " into the tree." << std::endl;
     
     //If the while loop is broken, then the tempNodeOne is at a NULL address. This is where the new node should go
-    if(childNum == 1) {
+    if(root->getChildNum() == 1) {
         root->setChildOne(token->getData());
         //std::cout << word << " has been inserted on the left." << std::endl;
     }
-    else if(childNum == 2) {
+    else if(root->getChildNum() == 2) {
         root->setChildTwo(token->getData());
         //std::cout << word << " has been inserted in the middle." << std::endl;
     }
-    else if(childNum == 3) {
+    else if(root->getChildNum() == 3) {
         root->setChildThree(token->getData());
         //std::cout << word << " has been inserted on the right." << std::endl;
     }
-    else if(childNum == 4) {
+    else if(root->getChildNum() == 4) {
         root->setChildFour(token->getData());
         //std::cout << word << " has been inserted on the right." << std::endl;
     }

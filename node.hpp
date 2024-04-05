@@ -11,6 +11,7 @@ namespace node {
         public:
             inline Node(std::string val) {
                 data = val;
+                childNum = 1;
                 childOne = NULL;
                 childTwo = NULL;
                 childThree = NULL;
@@ -23,6 +24,7 @@ namespace node {
 
             void setChildOne(std::string val) {
                 childOne = new Node(val);
+                childNum++;
             }
 
             Node* getChildTwo() {
@@ -31,6 +33,7 @@ namespace node {
 
             void setChildTwo(std::string val) {
                 childTwo = new Node(val);
+                childNum++;
             }
 
             Node* getChildThree() {
@@ -39,6 +42,7 @@ namespace node {
 
             void setChildThree(std::string val) {
                 childThree = new Node(val);
+                childNum++;
             }
 
             Node* getChildFour() {
@@ -47,14 +51,20 @@ namespace node {
 
             void setChildFour(std::string val) {
                 childFour = new Node(val);
+                childNum++;
             }
 
             const std::string getData() {
                 return data;
             }
 
+            const int getChildNum() {
+                return childNum;
+            }
+
         private:
             std::string data;
+            int childNum;
             Node* childOne;
             Node* childTwo;
             Node* childThree;

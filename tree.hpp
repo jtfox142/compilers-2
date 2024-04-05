@@ -9,7 +9,7 @@
 namespace tree {
 
     void printPreorder(node::Node*, int);
-    void insert(node::Node*, int, node::Node*);
+    void insert(node::Node*, node::Node*);
 
 } //namespace tree
 
