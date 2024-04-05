@@ -59,6 +59,7 @@ bool isValidIntTok(std::string tokenString) {
 }
 
 std::string filter(std::string tokenString) {
+    //Filter out comments
     std::string comment = "//";
     int charPos = tokenString.find(comment);
     if(charPos != -1) {

@@ -1,9 +1,11 @@
+#include "node.hpp"
+
 #ifndef parserH
 #define parserH
 
 namespace parser {
 
-    void parse();
+    node::Node* parse();
 
 }  // namespace parser
 
