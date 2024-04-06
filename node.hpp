@@ -54,7 +54,7 @@ namespace node {
             }
 
             void setChildFour(Node* child) {
-                childFive = child;
+                childFour = child;
                 childNum++;
             }
 

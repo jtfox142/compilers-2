@@ -46,4 +46,20 @@ void tree::insert(node::Node* token, node::Node* root) {
         root->setChildFour(token);
         //std::cout << word << " has been inserted on the right." << std::endl;
     }
+    else if(root->getChildNum() == 5) {
+        root->setChildFive(token);
+        //std::cout << word << " has been inserted in the middle." << std::endl;
+    }
+    else if(root->getChildNum() == 6) {
+        root->setChildSix(token);
+        //std::cout << word << " has been inserted on the right." << std::endl;
+    }
+    else if(root->getChildNum() == 7) {
+        root->setChildSeven(token);
+        //std::cout << word << " has been inserted on the right." << std::endl;
+    }
+    else if(root->getChildNum() == 8) {
+        root->setChildEight(token);
+    }
+    
 }

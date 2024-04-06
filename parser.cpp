@@ -126,7 +126,6 @@ node::Node* func() {
     node::Node* root = new node::Node("func()");
     try {
         match("func", root);
-        tree::insert(new node::Node(_lookahead.tokenInstance), root);
         match(token::tokenIdList::idTok, root);
     }
     catch(const std::exception& ex) {
