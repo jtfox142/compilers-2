@@ -45,8 +45,7 @@ node::Node* gotoNonTerminal();
 node::Node* parser::parse() {
     _lookahead = scanner::getNextToken();
     node::Node *root = program();
-
-    std::cout << "Okay :)" << std::endl;
+    
     return root;
 }
 

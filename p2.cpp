@@ -1,5 +1,6 @@
 #include "scanner.hpp"
 #include "parser.hpp"
+#include "tree.hpp"
 
 #include <iostream>
 #include <deque>
@@ -42,7 +43,8 @@ int main(int argc, char* argv[]) {
     //Try to open the file and read the data onto a deque for processing
     try {
         scanner::startStream(fileName);
-        parser::parse();
+        node::Node* tree = parser::parse();
+        tree::printPreorder(tree, 1);
     } catch(const std::exception& ex) {
         std::cerr << ex.what() << '\n';
         exit(1);

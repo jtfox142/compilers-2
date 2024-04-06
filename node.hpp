@@ -26,8 +26,8 @@ namespace node {
                 return childOne;
             }
 
-            void setChildOne(std::string val) {
-                childOne = new Node(val);
+            void setChildOne(Node* child) {
+                childOne = child;
                 childNum++;
             }
 
@@ -35,8 +35,8 @@ namespace node {
                 return childTwo;
             }
 
-            void setChildTwo(std::string val) {
-                childTwo = new Node(val);
+            void setChildTwo(Node* child) {
+                childTwo = child;
                 childNum++;
             }
 
@@ -44,8 +44,8 @@ namespace node {
                 return childThree;
             }
 
-            void setChildThree(std::string val) {
-                childThree = new Node(val);
+            void setChildThree(Node* child) {
+                childThree = child;
                 childNum++;
             }
 
@@ -53,8 +53,8 @@ namespace node {
                 return childFour;
             }
 
-            void setChildFour(std::string val) {
-                childFive = new Node(val);
+            void setChildFour(Node* child) {
+                childFive = child;
                 childNum++;
             }
 
@@ -62,8 +62,8 @@ namespace node {
                 return childFive;
             }
 
-            void setChildFive(std::string val) {
-                childFive = new Node(val);
+            void setChildFive(Node* child) {
+                childFive = child;
                 childNum++;
             }
 
@@ -71,8 +71,8 @@ namespace node {
                 return childSix;
             }
 
-            void setChildSix(std::string val) {
-                childSix = new Node(val);
+            void setChildSix(Node* child) {
+                childSix = child;
                 childNum++;
             }
 
@@ -80,8 +80,8 @@ namespace node {
                 return childSeven;
             }
 
-            void setChildSeven(std::string val) {
-                childSeven = new Node(val);
+            void setChildSeven(Node* child) {
+                childSeven = child;
                 childNum++;
             }
 
@@ -89,8 +89,8 @@ namespace node {
                 return childEight;
             }
 
-            void setChildEight(std::string val) {
-                childEight = new Node(val);
+            void setChildEight(Node* child) {
+                childEight = child;
                 childNum++;
             }
 

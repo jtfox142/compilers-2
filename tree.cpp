@@ -7,7 +7,11 @@
 void tree::printPreorder(node::Node *root, int level) {
     if(root == NULL) return;
 
-    std::cout << std::setw(level * 2) << root->getData().at(0) << ":" << root->getData() << std::endl;
+    for(int count = 0; count < level; count++) {
+        std::cout << "  ";
+    }
+
+    std::cout << root->getData() << std::endl;
     //file << std::setw(level * 2) << root->getData().at(0) << ":" << root->getData() << std::endl;
 
     printPreorder(root->getChildOne(), level+1);
@@ -25,22 +29,21 @@ void tree::insert(node::Node* token, node::Node* root) {
     //std::cout << "Inserting " << word << " into the tree." << std::endl;
     if(token == NULL)
         return;
-    
-    //If the while loop is broken, then the tempNodeOne is at a NULL address. This is where the new node should go
+
     if(root->getChildNum() == 1) {
-        root->setChildOne(token->getData());
+        root->setChildOne(token);
         //std::cout << word << " has been inserted on the left." << std::endl;
     }
     else if(root->getChildNum() == 2) {
-        root->setChildTwo(token->getData());
+        root->setChildTwo(token);
         //std::cout << word << " has been inserted in the middle." << std::endl;
     }
     else if(root->getChildNum() == 3) {
-        root->setChildThree(token->getData());
+        root->setChildThree(token);
         //std::cout << word << " has been inserted on the right." << std::endl;
     }
     else if(root->getChildNum() == 4) {
-        root->setChildFour(token->getData());
+        root->setChildFour(token);
         //std::cout << word << " has been inserted on the right." << std::endl;
     }
 }
