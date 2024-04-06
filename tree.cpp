@@ -23,6 +23,8 @@ void tree::printPreorder(node::Node *root, int level) {
 //Inefficient, but it works. Would love to optimize later
 void tree::insert(node::Node* token, node::Node* root) {
     //std::cout << "Inserting " << word << " into the tree." << std::endl;
+    if(token == NULL)
+        return;
     
     //If the while loop is broken, then the tempNodeOne is at a NULL address. This is where the new node should go
     if(root->getChildNum() == 1) {

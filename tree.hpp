@@ -8,6 +8,7 @@
 
 namespace tree {
 
+    //TODO: Figure out how to make insert static without throwing a compiler error.
     void printPreorder(node::Node*, int);
     void insert(node::Node*, node::Node*);
 
